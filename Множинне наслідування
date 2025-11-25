@@ -1,0 +1,277 @@
+# ============================================
+# РАСИ
+# ============================================
+
+class Human:
+    race_name = "Людина"
+    
+    def __init__(self):
+        self.strength_bonus = 0
+        self.agility_bonus = 0
+        self.intelligence_bonus = 0
+        self.max_health_bonus = 10
+        self.adaptability = True
+    
+    def racial_ability(self):
+        return f"{self.name} використовує людську адаптивність - отримує +10% досвіду"
+
+
+class Elf:
+    race_name = "Ельф"
+    
+    def __init__(self):
+        self.strength_bonus = -2
+        self.agility_bonus = 5
+        self.intelligence_bonus = 3
+        self.max_health_bonus = 0
+        self.night_vision = True
+    
+    def racial_ability(self):
+        return f"{self.name} використовує ельфійську грацію - ухиляється від атаки"
+
+
+class Dwarf:
+    race_name = "Гном"
+    
+    def __init__(self):
+        self.strength_bonus = 4
+        self.agility_bonus = -2
+        self.intelligence_bonus = 0
+        self.max_health_bonus = 30
+        self.stone_skin = True
+    
+    def racial_ability(self):
+        return f"{self.name} використовує гномячу стійкість - зменшує шкоду на 20%"
+
+
+# ============================================
+# КЛАСИ
+# ============================================
+
+class Warrior:
+    class_name = "Воїн"
+    
+    def __init__(self):
+        self.base_health = 150
+        self.base_attack = 40
+        self.base_defense = 30
+        self.weapon = "Меч"
+        self.armor_type = "Важка броня"
+    
+    def class_ability(self):
+        damage = self.base_attack * 2
+        return f"{self.name} використовує Потужний Удар на {damage} шкоди!"
+    
+    def special_attack(self):
+        return f"{self.name} робить обертовий удар мечем!"
+
+
+class Mage:
+    class_name = "Маг"
+    
+    def __init__(self):
+        self.base_health = 80
+        self.base_attack = 15
+        self.base_defense = 10
+        self.weapon = "Посох"
+        self.mana = 200
+    
+    def class_ability(self):
+        if self.mana >= 50:
+            self.mana -= 50
+            return f"{self.name} кастує Вогняну Кулю на 80 шкоди! Мана: {self.mana}"
+        return f"{self.name} не має мани для закляття"
+    
+    def special_attack(self):
+        return f"{self.name} використовує магічну блискавку!"
+
+
+class Ranger:
+    class_name = "Рейнджер"
+    
+    def __init__(self):
+        self.base_health = 100
+        self.base_attack = 35
+        self.base_defense = 15
+        self.weapon = "Лук"
+        self.arrows = 50
+    
+    def class_ability(self):
+        if self.arrows > 0:
+            self.arrows -= 1
+            return f"{self.name} робить точний постріл! Стріл залишилось: {self.arrows}"
+        return f"{self.name} закінчились стріли"
+    
+    def special_attack(self):
+        return f"{self.name} випускає град стріл!"
+
+
+# ============================================
+# БАЗОВИЙ ГЕРОЙ
+# ============================================
+
+class Hero:
+    def __init__(self, name):
+        self.name = name
+        self.level = 1
+        self.experience = 0
+        
+        # Ініціалізація расових та класових характеристик
+        Human.__init__(self)
+        Warrior.__init__(self)
+        
+        # Розрахунок фінальних характеристик
+        self.max_health = self.base_health + self.max_health_bonus
+        self.health = self.max_health
+        self.attack = self.base_attack + self.strength_bonus
+        self.defense = self.base_defense
+        self.agility = 10 + self.agility_bonus
+        self.intelligence = 10 + self.intelligence_bonus
+    
+    def get_info(self):
+        return f"""
+        +====================================+
+          {self.name} - {self.race_name} {self.class_name}
+        +------------------------------------+
+          Рівень: {self.level}
+          HP: {self.health}/{self.max_health}
+          Атака: {self.attack}
+          Захист: {self.defense}
+          Спритність: {self.agility}
+          Інтелект: {self.intelligence}
+          Зброя: {self.weapon}
+        +====================================+
+        """
+    
+    def attack_enemy(self, enemy):
+        damage = max(1, self.attack - enemy.defense)
+        enemy.health -= damage
+        return f"{self.name} атакує {enemy.name} на {damage} шкоди!"
+
+
+# ============================================
+# КОНКРЕТНІ ГЕРОЇ
+# ============================================
+
+class HumanWarrior(Hero, Human, Warrior):
+    def __init__(self, name):
+        self.name = name
+        self.level = 1
+        self.experience = 0
+        
+        # Ініціалізація расових та класових характеристик
+        Human.__init__(self)
+        Warrior.__init__(self)
+        
+        # Розрахунок фінальних характеристик
+        self.max_health = self.base_health + self.max_health_bonus
+        self.health = self.max_health
+        self.attack = self.base_attack + self.strength_bonus
+        self.defense = self.base_defense
+        self.agility = 10 + self.agility_bonus
+        self.intelligence = 10 + self.intelligence_bonus
+
+
+class ElfRanger(Hero, Elf, Ranger):
+    def __init__(self, name):
+        self.name = name
+        self.level = 1
+        self.experience = 0
+        
+        Elf.__init__(self)
+        Ranger.__init__(self)
+        
+        self.max_health = self.base_health + self.max_health_bonus
+        self.health = self.max_health
+        self.attack = self.base_attack + self.strength_bonus
+        self.defense = self.base_defense
+        self.agility = 10 + self.agility_bonus
+        self.intelligence = 10 + self.intelligence_bonus
+
+
+class DwarfWarrior(Hero, Dwarf, Warrior):
+    def __init__(self, name):
+        self.name = name
+        self.level = 1
+        self.experience = 0
+        
+        Dwarf.__init__(self)
+        Warrior.__init__(self)
+        
+        self.max_health = self.base_health + self.max_health_bonus
+        self.health = self.max_health
+        self.attack = self.base_attack + self.strength_bonus
+        self.defense = self.base_defense
+        self.agility = 10 + self.agility_bonus
+        self.intelligence = 10 + self.intelligence_bonus
+
+
+class HumanMage(Hero, Human, Mage):
+    def __init__(self, name):
+        self.name = name
+        self.level = 1
+        self.experience = 0
+        
+        Human.__init__(self)
+        Mage.__init__(self)
+        
+        self.max_health = self.base_health + self.max_health_bonus
+        self.health = self.max_health
+        self.attack = self.base_attack + self.strength_bonus
+        self.defense = self.base_defense
+        self.agility = 10 + self.agility_bonus
+        self.intelligence = 10 + self.intelligence_bonus
+
+
+class ElfMage(Hero, Elf, Mage):
+    def __init__(self, name):
+        self.name = name
+        self.level = 1
+        self.experience = 0
+        
+        Elf.__init__(self)
+        Mage.__init__(self)
+        
+        self.max_health = self.base_health + self.max_health_bonus
+        self.health = self.max_health
+        self.attack = self.base_attack + self.strength_bonus
+        self.defense = self.base_defense
+        self.agility = 10 + self.agility_bonus
+        self.intelligence = 10 + self.intelligence_bonus
+
+
+# ============================================
+# КЛАС ВОРОГА ДЛЯ ТЕСТУВАННЯ
+# ============================================
+
+class Enemy:
+    def __init__(self, name):
+        self.name = name
+        self.health = 50
+        self.defense = 5
+
+
+# ============================================
+# ДЕМОНСТРАЦІЯ РОБОТИ
+# ============================================
+
+if __name__ == "__main__":
+    aragorn = HumanWarrior("Арагорн")
+    legolas = ElfRanger("Леголас")
+    gimli = DwarfWarrior("Гімлі")
+    gandalf = HumanMage("Гендальф")
+    elrond = ElfMage("Елронд")
+
+    heroes = [aragorn, legolas, gimli, gandalf, elrond]
+
+    for hero in heroes:
+        print(hero.get_info())
+        print(hero.class_ability())
+        print(hero.racial_ability())
+        print(hero.special_attack())
+        
+        # Тестуємо атаку на ворога
+        enemy = Enemy("Гоблін")
+        print(hero.attack_enemy(enemy))
+        print(f"У {enemy.name} залишилось {enemy.health} HP")
+        print("-----------------------------------------")
